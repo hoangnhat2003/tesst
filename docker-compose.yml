@@ -1,0 +1,26 @@
+version: "3.4"
+
+services:
+  postgres:
+    container_name: postgres_db_test
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./src/main/resources/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5555:5432"
+    networks:
+      - springboot-app
+    restart: unless-stopped
+
+volumes:
+  postgres:
+    driver: local
+
+networks:
+  springboot-app:
+    driver: bridge
